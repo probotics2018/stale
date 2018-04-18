@@ -1,4 +1,6 @@
-const expect = require('expect')
+/* eslint-disable camelcase */
+process.env.LOG_LEVEL = 'fatal'
+
 const {createRobot} = require('probot')
 const Stale = require('../lib/stale')
 const notFoundError = {
@@ -14,17 +16,17 @@ describe('stale', () => {
   beforeEach(() => {
     robot = createRobot()
 
-    const issueAction = expect.createSpy().andReturn(Promise.resolve(notFoundError))
+    const issueAction = jest.fn().mockImplementation(() => Promise.resolve(notFoundError))
 
     // Mock out the GitHub API
     github = {
       integrations: {
-        getInstallations: expect.createSpy()
+        getInstallations: jest.fn()
       },
-      paginate: expect.createSpy(),
+      paginate: jest.fn(),
       issues: {
         removeLabel: issueAction,
-        getLabel: expect.createSpy().andReturn(Promise.reject(notFoundError)),
+        getLabel: jest.fn().mockImplementation(() => Promise.reject(notFoundError)),
         createLabel: issueAction,
         addLabels: issueAction,
         createComment: issueAction,
@@ -39,19 +41,22 @@ describe('stale', () => {
     robot.auth = () => Promise.resolve(github)
   })
 
-  it('removes the stale label and ignores if it has already been removed', async () => {
-    let stale = new Stale(github, {perform: true, owner: 'probot', repo: 'stale'})
+  test(
+    'removes the stale label and ignores if it has already been removed',
+    async () => {
+      let stale = new Stale(github, {perform: true, owner: 'probot', repo: 'stale', logger: robot.log})
 
-    for (const type of ['pulls', 'issues']) {
-      try {
-        await stale.unmark(type, {number: 123})
-      } catch (_) {
-        throw new Error('Should not have thrown an error')
+      for (const type of ['pulls', 'issues']) {
+        try {
+          await stale.unmark(type, {number: 123})
+        } catch (_) {
+          throw new Error('Should not have thrown an error')
+        }
       }
     }
-  })
+  )
 
-  it('should limit the number of actions it takes each run', async () => {
+  test('should limit the number of actions it takes each run', async () => {
     const staleLabel = 'stale'
     const limitPerRun = 30
 
@@ -86,7 +91,7 @@ describe('stale', () => {
         items = items.filter(item => item.labels.map(label => label.name).includes(staleLabel))
       }
 
-      expect(items.length).toBeLessThanOrEqualTo(per_page)
+      expect(items.length).toBeLessThanOrEqual(per_page)
 
       return Promise.resolve({
         data: {
@@ -99,7 +104,10 @@ describe('stale', () => {
       let comments = 0
       let closed = 0
       let labeledStale = 0
-      github.issues.createComment = expect.createSpy().andCall(() => comments++).andReturn(Promise.resolve(notFoundError))
+      github.issues.createComment = jest.fn().mockImplementation(() => {
+        comments++
+        return Promise.resolve(notFoundError)
+      })
       github.issues.edit = ({owner, repo, number, state}) => {
         if (state === 'closed') {
           closed++
@@ -114,7 +122,7 @@ describe('stale', () => {
       // Mock out GitHub client
       robot.auth = () => Promise.resolve(github)
 
-      const stale = new Stale(github, {perform: true, owner: 'probot', repo: 'stale'})
+      const stale = new Stale(github, {perform: true, owner: 'probot', repo: 'stale', logger: robot.log})
       stale.config.limitPerRun = limitPerRun
       stale.config.staleLabel = staleLabel
       stale.config.closeComment = 'closed'
@@ -127,16 +135,19 @@ describe('stale', () => {
     }
   })
 
-  it('should not close issues if daysUntilClose is configured as false', async () => {
-    let stale = new Stale(github, {perform: true, owner: 'probot', repo: 'stale'})
-    stale.config.daysUntilClose = false
-    stale.getStale = expect.createSpy().andReturn(Promise.resolve({data: {items: []}}))
-    stale.getClosable = expect.createSpy()
+  test(
+    'should not close issues if daysUntilClose is configured as false',
+    async () => {
+      let stale = new Stale(github, {perform: true, owner: 'probot', repo: 'stale', logger: robot.log})
+      stale.config.daysUntilClose = false
+      stale.getStale = jest.fn().mockImplementation(() => Promise.resolve({data: {items: []}}))
+      stale.getClosable = jest.fn()
 
-    await stale.markAndSweep('issues')
-    expect(stale.getClosable).toNotHaveBeenCalled()
+      await stale.markAndSweep('issues')
+      expect(stale.getClosable).not.toHaveBeenCalled()
 
-    await stale.markAndSweep('pulls')
-    expect(stale.getClosable).toNotHaveBeenCalled()
-  })
+      await stale.markAndSweep('pulls')
+      expect(stale.getClosable).not.toHaveBeenCalled()
+    }
+  )
 })
