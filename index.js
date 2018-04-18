@@ -18,6 +18,7 @@ module.exports = async robot => {
   robot.on('schedule.repository', markAndSweep)
 
   async function unmark (context) {
+    console.log("unmarking now")
     if (!context.isBot) {
       const stale = await forRepository(context)
       let issue = context.payload.issue || context.payload.pull_request
