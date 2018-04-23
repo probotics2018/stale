@@ -2,6 +2,7 @@
 	"urgent":{
 		"timeout":"10h",
         "color":"f00000"
-    }
+    },
+    "timeformats": ["d", "h", "m", "s"]
 }
   
