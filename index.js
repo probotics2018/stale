@@ -1,3 +1,4 @@
+/* eslint-disable */
 const createScheduler = require('probot-scheduler')
 const Stale = require('./lib/stale')
 
@@ -20,10 +21,10 @@ module.exports = async robot => {
   async function unmark (context) {
     if (!context.isBot) {
       const stale = await forRepository(context)
-      stale.getStaleTime("urgent", new Date().getTime())
       let issue = context.payload.issue || context.payload.pull_request
       const type = context.payload.issue ? 'issues' : 'pulls'
 
+      stale.getStaleTime(type, "urgent", new Date().getTime())
       // Some payloads don't include labels
       if (!issue.labels) {
         try {
