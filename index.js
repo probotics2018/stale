@@ -24,7 +24,7 @@ module.exports = async robot => {
       let issue = context.payload.issue || context.payload.pull_request
       const type = context.payload.issue ? 'issues' : 'pulls'
 
-      stale.getStaleTime(type, "urgent", new Date().getTime())
+      console.log(stale.getStaleTime(type, "urgent", new Date().getTime()))
       // Some payloads don't include labels
       if (!issue.labels) {
         try {

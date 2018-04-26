@@ -1,25 +1,28 @@
 /* eslint-disable */
 
-let modifiedformat = '10h'
+let modifiedformat = '03d10h05m15s'
 const timeformats = ['d', 'h', 'm', 's'];
+let totalTime = 0;
 while (modifiedformat !== '') {
   for (let formatcount = 0; formatcount < timeformats.length; formatcount++) {
   	console.log("begin");
     if (modifiedformat.indexOf(timeformats[formatcount]) !== -1) {
-      console.log('modifiedformat: ' + modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount]) + 1));
-      console.log('modifiedformat: ' + modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]), modifiedformat.indexOf(timeformats[formatcount]) + 1));
       switch (modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]), modifiedformat.indexOf(timeformats[formatcount]) + 1)) {
         case 'd':
-          console.log('days');
+          var numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
+          totalTime += 86400 * numOfUnits;
           break;
         case 'h':
-          console.log("hours");
+          numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
+          totalTime += 3600 * numOfUnits;
           break;
         case "m":
-          console.log("minutes");
+          numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
+          totalTime += 60 * numOfUnits;
           break;
         case "s":
-          console.log("sec");
+          numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
+          totalTime += numOfUnits;
           break;
       }
       modifiedformat = modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) + 1, modifiedformat.length);
@@ -27,3 +30,4 @@ while (modifiedformat !== '') {
     }
   }
 }
+console.log(totalTime)
