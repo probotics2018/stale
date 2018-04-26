@@ -31,3 +31,5 @@ while (modifiedformat !== '') {
   }
 }
 console.log(totalTime)
+let date = new Date().getTime()
+console.log(date.toString().substring(0, (date.toString().length - 3)))
