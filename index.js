@@ -17,7 +17,17 @@ module.exports = async robot => {
 
   robot.on(events, unmark)
   robot.on('schedule.repository', markAndSweep)
-
+  robot.on([
+    'issues.created',
+    'pull_request.created'
+    ], setupLabels)
+  async function setupLabels(context) {
+    const stale = await forRepository(context)
+    var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
+    var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
+    context.github.issues.removeAllLabels()
+    context.github.issues.createLabel()
+  }
   async function unmark (context) {
     if (!context.isBot) {
       const stale = await forRepository(context)
