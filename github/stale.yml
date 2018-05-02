@@ -9,14 +9,14 @@ exemptLabels:
 
 Labels:
 	NameA:
-		daysUntilStale=10
-		daysUntilClose=1
+		- daysUntilStale=10
+		- daysUntilClose=1
 	NameB:
-		daysUntilStale=5
-		daysUntilClose=2
+		- daysUntilStale=5
+		- daysUntilClose=2
 	NameC:
-		daysUntilStale=3
-		daysUntilClose=3
+		- daysUntilStale=3
+		- daysUntilClose=3
 
 # Number of days of inactivity before an Issue or Pull Request becomes stale
 daysUntilStale: 60
