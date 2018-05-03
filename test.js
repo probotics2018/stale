@@ -1,35 +1,46 @@
-/* eslint-disable */
+const fs = require('fs');
 
-let modifiedformat = '03d10h05m15s'
-const timeformats = ['d', 'h', 'm', 's'];
-let totalTime = 0;
-while (modifiedformat !== '') {
-  for (let formatcount = 0; formatcount < timeformats.length; formatcount++) {
-  	console.log("begin");
-    if (modifiedformat.indexOf(timeformats[formatcount]) !== -1) {
-      switch (modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]), modifiedformat.indexOf(timeformats[formatcount]) + 1)) {
-        case 'd':
-          var numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
-          totalTime += 86400 * numOfUnits;
-          break;
-        case 'h':
-          numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
-          totalTime += 3600 * numOfUnits;
-          break;
-        case "m":
-          numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
-          totalTime += 60 * numOfUnits;
-          break;
-        case "s":
-          numOfUnits = parseInt(modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) - 2, modifiedformat.indexOf(timeformats[formatcount])));
-          totalTime += numOfUnits;
-          break;
-      }
-      modifiedformat = modifiedformat.substring(modifiedformat.indexOf(timeformats[formatcount]) + 1, modifiedformat.length);
-      console.log(modifiedformat)
+const fetchLabels = [
+  {
+    id: 815479855,
+    url: 'https://api.github.com/repos/probotics2018/test/labels/bug',
+    name: 'bug',
+    color: 'd73a4a',
+    default: true,
+  },
+  {
+    id: 815479856,
+    url: 'https://api.github.com/repos/probotics2018/test/labels/duplicate',
+    name: 'duplicate',
+    color: 'cfd3d7',
+    default: true,
+  },
+  {
+    id: 815479856,
+    url: 'https://api.github.com/repos/probotics2018/test/labels/duplicate',
+    name: 'urgfent',
+    color: 'cfd3d7',
+    default: true,
+  },
+];
+const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
+const toBeCreated = [];
+
+for (let i = 0; i < Object.keys(customLabels).length; i += 1) {
+  let labelExists = false;
+  for (let ii = 0; ii < fetchLabels.length; ii += 1) {
+    if (fetchLabels[ii].name === Object.keys(customLabels)[i]) {
+      labelExists = true;
     }
   }
+
+  if (!labelExists) {
+    const labelObj = {};
+    labelObj[Object.keys(customLabels)[i]] = customLabels[Object.keys(customLabels)[i]];
+    toBeCreated.push(labelObj);
+  }
 }
-console.log(totalTime)
-let date = new Date().getTime()
-console.log(date.toString().substring(0, (date.toString().length - 3)))
+for (let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
+  console.log("running");
+  console.log(Object.keys(toBeCreated[labelindex])[0], customLabels.color, toBeCreated[labelindex].description);
+}

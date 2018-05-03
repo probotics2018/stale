@@ -25,8 +25,27 @@ module.exports = async robot => {
     const stale = await forRepository(context)
     var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
-    context.github.issues.removeAllLabels()
-    context.github.issues.createLabel()
+    fetchLabels = context.github.issues.getLabels(owner, repo);
+    const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
+    let toBeCreated = [];
+
+    for (let i = 0; i < Object.keys(customLabels).length; i += 1) {
+      let labelExists = false;
+      for (let ii = 0; ii < fetchLabels.length; ii += 1) {
+        if (fetchLabels[ii].name === Object.keys(customLabels)[i]) {
+          labelExists = true;
+        }
+      }
+
+      if (!labelExists) {
+        const labelObj = {};
+        labelObj[Object.keys(customLabels)[i]] = customLabels[Object.keys(customLabels)[i]];
+        toBeCreated.push(labelObj);
+      }
+    }
+    for(let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
+      context.github.issues.createLabel(owner, repo, Object.keys(toBeCreated[labelindex])[0], toBeCreated[labelindex].color, toBeCreated[labelindex].description)
+    }
   }
   async function unmark (context) {
     if (!context.isBot) {

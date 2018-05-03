@@ -1,7 +1,8 @@
 {
 	"urgent":{
 		"timeout":"10h",
-        "color":"f00000"
+        "color":"f00000",
+        "description":"A very urgent label"
     }
 }
   
