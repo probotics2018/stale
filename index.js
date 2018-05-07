@@ -10,13 +10,13 @@ module.exports = async robot => {
   const events = [
     'issue_comment',
     'issues',
-    'pull_request',
     'pull_request_review',
     'pull_request_review_comment'
   ]
 
   robot.on(events, unmark)
   robot.on('schedule.repository', markAndSweep)
+  robot.on('pull_request', setupLabels)
 
   async function setupLabels(context) {
     console.log("RUNNING");
@@ -46,6 +46,7 @@ module.exports = async robot => {
       labelName = Object.keys(labelOBJ)[0];
       context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
     }
+    unmark(context)
   }
   async function unmark (context) {
     setupLabels(context);
