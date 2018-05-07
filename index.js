@@ -21,6 +21,7 @@ module.exports = async robot => {
   async function setupLabels(context) {
     console.log("RUNNING");
     const stale = await forRepository(context)
+    console.log(context["payload"]["pull_request"]["head"]["repo"])
     var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
     fetchLabels = context.github.issues.getLabels(owner, repo);
