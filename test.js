@@ -40,7 +40,9 @@ for (let i = 0; i < Object.keys(customLabels).length; i += 1) {
     toBeCreated.push(labelObj);
   }
 }
+console.log(toBeCreated);
 for (let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
-  console.log("running");
-  console.log(Object.keys(toBeCreated[labelindex])[0], customLabels.color, toBeCreated[labelindex].description);
+  labelOBJ = toBeCreated[labelindex];
+  labelName = Object.keys(labelOBJ)[0];
+  console.log(labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
 }

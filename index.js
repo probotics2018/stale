@@ -27,8 +27,7 @@ module.exports = async robot => {
     var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
     fetchLabels = context.github.issues.getLabels(owner, repo);
     const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
-    let toBeCreated = [];
-
+    const toBeCreated = [];
     for (let i = 0; i < Object.keys(customLabels).length; i += 1) {
       let labelExists = false;
       for (let ii = 0; ii < fetchLabels.length; ii += 1) {
@@ -43,8 +42,10 @@ module.exports = async robot => {
         toBeCreated.push(labelObj);
       }
     }
-    for(let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
-      context.github.issues.createLabel(owner, repo, Object.keys(toBeCreated[labelindex])[0], toBeCreated[labelindex].color, toBeCreated[labelindex].description)
+    for (let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
+      labelOBJ = toBeCreated[labelindex];
+      labelName = Object.keys(labelOBJ)[0];
+      context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
     }
   }
   async function unmark (context) {
