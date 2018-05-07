@@ -21,33 +21,33 @@ module.exports = async robot => {
   async function setupLabels(context) {
     console.log("RUNNING");
     const stale = await forRepository(context)
-    console.log(context["payload"]["pull_request"]["head"]["repo"])
-    var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
-    var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
-    fetchLabels = context.github.issues.getLabels(owner, repo);
-    const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
-    const toBeCreated = [];
-    for (let i = 0; i < Object.keys(customLabels).length; i += 1) {
-      let labelExists = false;
-      for (let ii = 0; ii < fetchLabels.length; ii += 1) {
-        if (fetchLabels[ii].name === Object.keys(customLabels)[i]) {
-          labelExists = true;
-        }
-      }
+    // var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
+    // var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
+    console.log(JSON.stringify(context));
+    // fetchLabels = context.github.issues.getLabels(owner, repo);
+    // const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
+    // const toBeCreated = [];
+    // for (let i = 0; i < Object.keys(customLabels).length; i += 1) {
+    //   let labelExists = false;
+    //   for (let ii = 0; ii < fetchLabels.length; ii += 1) {
+    //     if (fetchLabels[ii].name === Object.keys(customLabels)[i]) {
+    //       labelExists = true;
+    //     }
+    //   }
 
-      if (!labelExists) {
-        const labelObj = {};
-        labelObj[Object.keys(customLabels)[i]] = customLabels[Object.keys(customLabels)[i]];
-        toBeCreated.push(labelObj);
-      }
-    }
-    for (let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
-      console.log("creating label");
-      labelOBJ = toBeCreated[labelindex];
-      labelName = Object.keys(labelOBJ)[0];
-      context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
-    }
-    unmark(context)
+    //   if (!labelExists) {
+    //     const labelObj = {};
+    //     labelObj[Object.keys(customLabels)[i]] = customLabels[Object.keys(customLabels)[i]];
+    //     toBeCreated.push(labelObj);
+    //   }
+    // }
+    // for (let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
+    //   console.log("creating label");
+    //   labelOBJ = toBeCreated[labelindex];
+    //   labelName = Object.keys(labelOBJ)[0];
+    //   context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
+    // }
+    // unmark(context)
   }
   async function unmark (context) {
     setupLabels(context);
