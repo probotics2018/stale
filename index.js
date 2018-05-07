@@ -22,6 +22,7 @@ module.exports = async robot => {
     'pull_request.created'
     ], setupLabels)
   async function setupLabels(context) {
+    console.log("RUNNING");
     const stale = await forRepository(context)
     var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
@@ -43,6 +44,7 @@ module.exports = async robot => {
       }
     }
     for (let labelindex = 0; labelindex < toBeCreated.length; labelindex += 1) {
+      console.log("creating label");
       labelOBJ = toBeCreated[labelindex];
       labelName = Object.keys(labelOBJ)[0];
       context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
