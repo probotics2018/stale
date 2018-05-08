@@ -17,7 +17,7 @@ module.exports = async robot => {
 
   robot.on(events, unmark)
   robot.on('schedule.repository', markAndSweep)
-  robot.on('pull_request', setupLabels)
+  robot.on('pull_request.created', setupLabels)
 
   async function setupLabels(context) {
     console.log("RUNNING");
