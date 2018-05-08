@@ -23,7 +23,7 @@ module.exports = async robot => {
     const stale = await forRepository(context)
     // var owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     // var repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
-    console.log(JSON.stringify(context));
+    console.log("Context : " + JSON.stringify(context));
     // fetchLabels = context.github.issues.getLabels(owner, repo);
     // const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
     // const toBeCreated = [];
