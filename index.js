@@ -1,6 +1,7 @@
 /* eslint-disable */
 const createScheduler = require('probot-scheduler')
 const Stale = require('./lib/stale')
+const fs = require('fs')
 
 module.exports = async robot => {
   // Visit all repositories to mark and sweep stale issues
