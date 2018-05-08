@@ -50,7 +50,13 @@ module.exports = async robot => {
       console.log("creating label");
       labelOBJ = toBeCreated[labelindex];
       labelName = Object.keys(labelOBJ)[0];
-      await context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
+      await context.github.issues.createLabel({
+        "owner": owner, 
+        "repo": repo, 
+        "name": labelName, 
+        "color": labelOBJ[labelName]['color'], 
+        "description": labelOBJ[labelName]['description']
+      });
     }
   }
   async function unmark (context) {
