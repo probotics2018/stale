@@ -21,16 +21,10 @@ module.exports = async robot => {
   async function setupLabels(context) {
     console.log("RUNNING");
     const stale = await forRepository(context)
-    console.log("PAYLOAD : " + context["payload"]);
-    console.log("PR : " + context["payload"]["pull_request"]);
-    console.log("HEAD : " + context["payload"]["pull_request"]["head"])
-    console.log("REPO : " + context["payload"]["pull_request"]["head"]["repo"])
-    console.log("OWNER : " + context["payload"]["pull_request"]["head"]["repo"]["owner"]);
-    console.log("LOGIN : " + context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"]);
     const owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     const repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
-    console.log("Context : " + JSON.stringify(context));
-    fetchLabels = await context.github.issues.getLabels(owner, repo);
+    console.log(typeof owner + " " + typeof repo);
+    fetchLabels = await context.github.issues.getLabels({owner, repo});
     console.log("labels : " +  JSON.stringify(fetchLabels));
     const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
     const toBeCreated = [];
