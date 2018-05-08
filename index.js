@@ -24,7 +24,10 @@ module.exports = async robot => {
     const owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     const repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
     console.log(typeof owner + " " + typeof repo);
-    fetchLabels = await context.github.issues.getLabels({owner, repo});
+    fetchLabels = await context.github.issues.getLabels({
+      "owner": owner, 
+      "repo": repo
+    });
     console.log("labels : " +  JSON.stringify(fetchLabels));
     const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
     const toBeCreated = [];
