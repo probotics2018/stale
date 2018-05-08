@@ -24,7 +24,7 @@ module.exports = async robot => {
     const owner = context["payload"]["pull_request"]["head"]["repo"]["owner"]["login"];
     const repo = context["payload"]["pull_request"]["head"]["repo"]["name"];
     console.log("Context : " + JSON.stringify(context));
-    fetchLabels = context.github.issues.getLabels(owner, repo);
+    fetchLabels = await context.github.issues.getLabels(owner, repo);
     console.log("labels : " +  JSON.stringify(fetchLabels));
     const customLabels = JSON.parse(fs.readFileSync('labels.json', 'utf8'));
     const toBeCreated = [];
@@ -46,7 +46,7 @@ module.exports = async robot => {
       console.log("creating label");
       labelOBJ = toBeCreated[labelindex];
       labelName = Object.keys(labelOBJ)[0];
-      context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
+      await context.github.issues.createLabel(owner, repo, labelName, labelOBJ[labelName]['color'], labelOBJ[labelName]['description']);
     }
   }
   async function unmark (context) {
